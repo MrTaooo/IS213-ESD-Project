@@ -53,7 +53,7 @@ class LocationController {
             JSONObject ipInfoJsonObj = new JSONObject(ipInfoResponse.toString());
             String latLng = ipInfoJsonObj.getString("loc");
 
-            String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLng + "&key=AIzaSyCItPqAhCSJVc13yxvnZoHb7SyTajxJWJ8"; // Replace YOUR_API_KEY_HERE with your actual API key
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLng + "&key=.....EnterYourGoogleAPIHere....."; // Replace YOUR_API_KEY_HERE with your actual API key
 
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();

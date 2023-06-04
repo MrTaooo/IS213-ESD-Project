@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Replace with your own Stripe API keys
-stripe.api_key = 'sk_test_51MltK7EBOpB8WMsEGsB51xLyAgs77LcOmFOr8mmzF2cPB0Fb0TeKXRRcv24nI6GId4wSEWovYyvWfx8iL2SmKpP800dNlhECw0'
+stripe.api_key = '.....EnterYourStripeAPIKeyHere.....'
 
 
 @app.route('/payment', methods=['POST'])

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <link rel="stylesheet" href="css/home.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- ensures that user is logged in -->
+    <!-- enable this when everything is done -->
+    <!-- <script>
+        if (sessionStorage.getItem("userId") == null) {
+            window.location.href = "login.html";
+        }
+    </script> -->
+</head>
+
+<body id="homePage" style="background-color: #F7F7F7;">
+    <!-- de2f52 -->
+    <!-- nav bar -->
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #368373">
+        <div class="container">
+            <img src="img/logo.png" style="width:64px; height:64px">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myMenu"
+                aria-controls="myMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="myMenu">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-item nav-link text-white active" aria-current="page" href="home.html">Home</a>
+                    <!-- <a class="nav-item nav-link text-white" href="">Buy</a> -->
+                    <a class="nav-item nav-link text-white" href="">Sell</a>
+                    <a class="nav-item nav-link text-white" href="profile.html">Profile</a>
+                    <a class="nav-item nav-link text-white" href="login.html" onclick="logoutFunction()">Logout</a>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+
+    <!-- SEARCH BAR -START -->
+    <div class="search-container-fluid justify-content-center" style="background-color: #b1cfc9;">
+        <!--Search bar-->
+        <div id="search-bar">
+            <form action="" class="row justify-content-center mw-80">
+                <div class="col mw-70 p-10" style=" max-width: 500px; padding: 35px;">
+                    <!-- search input box-->
+                    <!--Search button-->
+                    <div class="input-group ">
+                        <input class="form-control" type="text" placeholder="Eg. Chair" v-model="search_input_value">
+
+                        <button type="button" class="btn" style="background-color:#7c918d; color: white;"
+                            @click="">Search</button>
+
+                    </div>
+
+                </div> <!-- end of div col-4-->
+                <!-- add to cart icon with badge -->
+                <div class="col-1 align-self-center">
+
+                    <a class="link-secondary position-relative" href="cart.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                            class="bi bi-cart-fill " viewBox="0 0 16 16">
+                            <path
+                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+
+                            <!-- badge -->
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger" >
+                                {{cartCount}}
+                            </span>
+                        </svg>
+                    </a>
+                </div> <!-- end of add to cart icon -->
+
+            </form> <!-- end of form-->
+        </div> <!-- end of div search bar-->
+
+    </div>
+    <!-- SEARCH BAR -END -->
+
+    <!-- Product Cards -->
+    <div id="products" class="mt-0 cards_landscape_wrap-2">
+
+        <div v-if="isLoading">
+            <div class="mt-5">
+                <i class="fa fa-spinner fa-spin" style="font-size:48px;color:gray"></i>
+                <h3>loading products...</h3>
+            </div>
+        </div>
+        <div class="container pt-0 px-auto">
+
+            <div
+                class="row row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-2 row-cols-1 justify-content-center justify-content-sm-start justify-content-md-start justify-content-lg-start justify-content-xl-start  align-items-start ">
+
+
+                <!--dynamically retrieved events from db-->
+                <!--template for a product-->
+                <div class="col-8" align="center" v-for="product in displayProducts">
+
+                    <!-- start of card-->
+                    <div class="card" style="background-color: #f5ece4;" :id="`productCard${product.productID}`">
+                        <div class="text-box">
+                            <div class="image-box">
+                                <img :src="product.imgURL" />
+                            </div>
+                            <div class="text-container">
+
+                                <h4 class="card-title"> {{ product.itemName }} </h4>
+
+                                <!-- BODY -->
+                                <p class="card-text text-wrap">
+                                    Date of Post: {{ product.dateOfPost }}
+                                    <br>
+                                    Price per Unit: ${{ product.price }}
+                                    <br>
+                                    Quantity: {{ product.quantity }}
+                                    <br>
+                                    Distance from you: {{ product.distance }} km 
+
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col d-flex justify-content-evenly align-items-center">
+                                <!-- Start of Quantity button -->
+                                <div class="quantity">
+
+                                    <button class="minus-btn qty_buttons" name="button"
+                                        @click="decrementQuantity(`qty${product.productID}`)">
+                                        <img src="https://designmodo.com/demo/shopping-cart/minus.svg" alt="" />
+                                    </button>
+
+                                    <input type="text" :id="`qty${product.productID}`" value="1">
+
+                                    <button class="plus-btn qty_buttons" name="button"
+                                        @click="incrementQuantity(`qty${product.productID}`)">
+                                        <img src="https://designmodo.com/demo/shopping-cart/plus.svg" alt="" />
+                                    </button>
+
+                                </div>
+                                <!-- End of Quantity button -->
+
+                                <!--Start of Add to cart button-->
+                                <button type="button" class="btn btn-sm float-end " data-bs-toggle="modal"
+                                    data-bs-target="#addToCartStatus" style="background-color: #368373; color: white;"
+                                    @click="addToCart(product.productID)">
+                                    Add to Cart
+                                    <i class="fa fa-shopping-cart mx-1"></i>
+                                </button>
+                                <!--End of Add to cart button-->
+                                
+                                <!-- Modal -->
+                                <div class="modal fade modal-sm" id="addToCartStatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <!-- <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1> -->
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div id="modal-body" class="modal-body">
+                                        <div>
+                                            <i class="fa fa-check-circle" style="font-size:48px;color:green"></i>
+                                            <h3>Successfully added to cart!</h3>
+                                        </div>
+                                      </div>
+                                      <!-- <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                      </div> -->
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div> <!-- end of product div-->
+                
+                
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- Vue.js 3 CDN -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script src="js/home.js"></script>
+
+</html>

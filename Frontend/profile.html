@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <!-- fontawesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- custom css -->
+    <link rel="stylesheet" href="css/profile.css">
+
+    <!-- ensures that user is logged in -->
+    <!-- enable this when everything is done -->
+    <!-- <script>
+        if (sessionStorage.getItem("userId") == null) {
+            window.location.href = "login.html";
+        }
+    </script> -->
+
+</head>
+<body id="profilePage"> 
+    <!-- nav bar -->
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #368373">
+        <div class="container">
+            <img src="img/logo.png" style="width:64px; height:64px">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myMenu"
+                aria-controls="myMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="myMenu">
+              <div class="navbar-nav ms-auto">
+                <a class="nav-item nav-link text-white active" aria-current="page" href="home.html">Home</a>
+                <!-- <a class="nav-item nav-link text-white" href="">Buy</a> -->
+                <a class="nav-item nav-link text-white" href="">Sell</a>
+                <a class="nav-item nav-link text-white" href="profile.html">Profile</a>
+                <a class="nav-item nav-link text-white" href="login.html" onclick="logoutFunction()">Logout</a>
+              </div>
+            </div>
+
+        </div>
+    </nav>
+    <!-- nav bar end -->
+    <div style="background-color: #b1cfc9;">
+        <h1 class="text text-center py-4">Profile</h1>
+    </div>
+
+    <!-- Profile ------------------------------------------------------------------------------------------>
+    <section>
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col col-md-9 col-lg-7 col-xl-5">
+            <div class="card">
+              <div class="card-body p-4">
+                <div class="d-flex text-black">
+                  <div class="flex-grow-1 ms-3">
+                    <header>
+                      <h1>{{userName}}</h1>
+                    </header>
+                    <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                      style="background-color: #efefef;">
+                      <h6 class="mx-auto">Total Listings: {{listingCount}}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Profile End -->
+
+
+  <div class="container">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="userListings-tab" data-bs-toggle="tab" data-bs-target="#userListings" 
+        type="button" role="tab" aria-controls="userListings" aria-selected="true">Listings</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="orderHistory-tab" data-bs-toggle="tab" data-bs-target="#orderHistory" 
+        type="button" role="tab" aria-controls="orderHistory" aria-selected="false">Order History</button>
+      </li>
+    </ul>
+
+    <!-- Listings & Order History Tab panes -------------------------------------------------------------------------------------------------------->
+    <div class="tab-content">
+      
+      <div class="tab-pane active" id="userListings" role="tabpanel" aria-labelledby="userListings-tab">
+        <!-- User Listings -->
+        <div class="d-flex flex-wrap mt-4">
+          <div v-for="product in products">
+            <!-- Only display user's products -->
+            <span v-if="product.sellerID==userId"> 
+              <div class="card mx-2 mb-3 p-2" style="background-color: #f5ece4; width: 15rem;" :id="`productCard${product.productID}`">
+                <img class="card-img-top" style="height:170px;" :src="product.imgURL">
+                <div class="card-body">
+                  <h4 class="card-title">{{ product.itemName }}</h4>
+                  <p class="card-text text-wrap">
+                    Date listed: {{ product.dateOfPost }}
+                    <br>
+                    Price per Unit: {{ product.price }}
+                    <br>
+                    Quantity: {{ product.quantity }}
+                    <br>
+                  </p>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+        <!-- End User Listings -->
+      </div>
+      <!-- Order History ------------------------------------------------------------------------------------------>
+      <div class="tab-pane" id="orderHistory" role="tabpanel" aria-labelledby="orderHistory-tab">
+        
+        <div class="container mt-4">
+          <!-- Inner Nav tabs -->
+          <ul class="nav nav-pills mb-3 justify-content-center" id="miniTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="bought-tab" data-bs-toggle="tab" data-bs-target="#bought" 
+              type="button" role="tab" aria-controls="bought" aria-selected="true">Bought</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="sold-tab" data-bs-toggle="tab" data-bs-target="#sold" 
+              type="button" role="tab" aria-controls="sold" aria-selected="false">Sold</button>
+            </li>
+          </ul>
+      
+          <!-- Boy Sold Tab panes -------------------------------------------------------------------------------------------------------->
+          <div class="tab-content">
+            
+            <div class="tab-pane active" id="bought" role="tabpanel" aria-labelledby="bought-tab">
+          
+                <div class="container">
+                  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+                    <!-- dynamic sell order history -->
+                    <div v-for="buyOrder in buyHistory" class="col mb-4">
+                      <div class="card bg-light" style="max-width: 15rem;">
+                        <div class="card-header">Order: {{buyOrder.orderID}} [{{buyOrder.status}}]</div>
+                      <img style="height:170px;" :src="buyOrder.imgURL">
+                      <div class="card-body">
+                        <h5 class="card-title">{{buyOrder.itemName}}</h5>
+                        <p class="card-text">
+                          Quantity: {{buyOrder.quantity}}
+                          <br>
+                          Order date: {{buyOrder.dateOfOrder}}
+                        </p>
+                        <div v-if="buyOrder.status=='Completed'">
+                        <button :id="buyOrder.orderID+buyOrder.itemName" @click="returnItem(buyOrder)" 
+                          class="btn btn-outline-secondary mx-4">Request Refund</button>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+      
+            <div class="tab-pane" id="sold" role="tabpanel" aria-labelledby="sold-tab">
+
+              <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+                  <!-- dynamic sell order history -->
+                  <div v-for="sellOrder in sellHistory" class="col mb-4">
+                    <div class="card bg-light" style="max-width: 15rem;">
+                      <div class="card-header">Order: {{sellOrder.orderID}} [{{sellOrder.status}}]</div>
+                      <img style="height:170px;" :src="sellOrder.imgURL">
+                      <div class="card-body">
+                        <h5 class="card-title">{{sellOrder.itemName}}</h5>
+                        <p class="card-text">
+                          Quantity: {{sellOrder.quantity}}
+                          <br>
+                          Order date: {{sellOrder.dateOfOrder}}
+                        </p>
+                        <div v-if="sellOrder.status=='Processing Refund'" class="d-flex justify-content-center">
+                          <!-- Button trigger modal -->
+                          <button :id="'approve'+sellOrder.orderID+sellOrder.productID" 
+                            @click="approveRefund(sellOrder)"
+                            class="btn btn-outline-success mx-2 mb-2 w-100" 
+                            data-bs-toggle="modal" data-bs-target="#allowRefund">Allow Refund</button>
+                          <button :id="'reject'+sellOrder.orderID+sellOrder.productID" 
+                            @click="rejectRefund(sellOrder)"
+                            class="btn btn-outline-danger mx-2 mb-2 w-100">Reject Refund</button>
+                        </div>
+                        <!-- <div v-else>
+                          <button type="button" class="btn btn-primary invisible disabled">filler</button>
+                        </div> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+                
+            </div>
+
+            <!-- End of order history -->
+      
+            </div>
+          </div>
+          <!-- End of Tab Content -->
+        </div>  
+      <!-- End of order history -->
+
+      </div>
+    </div>
+    <!-- End of Tab Content -->
+  </div>  
+
+  
+
+  <!-- Refund Payment Modal -------------------------------------------------------------------------------------------------->
+  <form class="needs-validation" novalidate="">
+    <div class="modal fade" id="allowRefund" tabindex="-1" aria-labelledby="allowRefundLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="allowRefundLabel">Allow Refund</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="cc-name">Name on card</label>
+                  <input type="text" class="form-control" id="cardHolderName" placeholder="" required="">
+                  <div class="invalid-feedback">
+                    Name on card is required
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <i class="fas fa-credit-card"></i>
+                  <label for="cc-number">&nbsp Credit card number</label>
+                  <input type="text" class="form-control" id="cardNumber" placeholder="" required="" maxlength="16">
+                  <div class="invalid-feedback">
+                    Credit card number is required
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 mb-3">
+                  <i class="fas fa-calendar-alt"></i>
+                  <label for="cc-expiration">&nbsp Expiration</label>
+                  <input type="text" class="form-control" id="expDate" placeholder="MM/YY" required="" maxlength="5">
+                  <div class="invalid-feedback">
+                    Expiration date required
+                  </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                  <i class="fas fa-key"></i>
+                  <label for="cc-cvv">&nbsp CVC</label>
+                  <input type="text" class="form-control" id="CVC" placeholder="" required="" maxlength="3">
+                  <div class="invalid-feedback">
+                    Security code required
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" @click="sendPayment()" class="btn btn-success" id="refund-button">Refund</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- End Refund Payment Modal -->
+
+
+  <!-- jquery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+  <!-- isotope js -->
+  <!-- <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script> -->
+  <!-- bootstrap js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Vue.js 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- custom js -->    
+  <script src="js/profile.js"></script>
+
+  <!-- <script>
+    // init Isotope
+    var $grid = $('.orders-list').isotope({
+      // options
+    });
+
+    // filter items on page load
+    var filterValue = $('.filter-button-group').find('.active-filter-btn').attr('data-filter');
+    $grid.isotope({ filter: filterValue });
+
+    // filter items on button click
+    $('.filter-button-group').on( 'click', 'button', function() {
+      var filterValue = $(this).attr('data-filter');
+      resetFilterBtns();
+      $(this).addClass('active-filter-btn');
+      $grid.isotope({ filter: filterValue });
+    });
+
+    var filterBtns = $('.filter-button-group').find('button');
+
+    function resetFilterBtns(){
+      filterBtns.each(function(){
+        $(this).removeClass('active-filter-btn');
+      });
+    }
+
+  </script> -->
+</body>
+</html>
